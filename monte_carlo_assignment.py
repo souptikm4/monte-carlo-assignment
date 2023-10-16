@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """
-Code to do monte-carlo assignment (11/10/2023).
+Code to do monte-carlo assignment (11/10/2023). 
+Defined a structure of protein as a matrix of residue numbers,
+it returns the best sequence of hydrophobic and polar residues.
 
-  How to use
-  ----------
+  How to use-
 First you need to have the python package numpy. You can install it with the following command : pip install numpy
 
 You can adjust the temperature and number of steps in the main function.
@@ -15,9 +16,6 @@ Then you can run the script with the following command :
   ------
     Souptik Mandal
 """
-
-
-
 
 import numpy as np
 import random
@@ -42,6 +40,14 @@ SOLVENT_INTERACTIONS_SIDES = {
 
 
 def get_matrix_corners_and_sides(matrix):
+    '''
+    The function returns the corners and exposed sides of the matrix
+    Parameters :
+        matrix (numpy.ndarray) : The matrix
+    Returns :   
+        corners (list) : The corners of the matrix
+        exposed_sides (list) : The exposed sides of the matrix
+    '''
     num_rows = len(matrix)
     num_cols = len(matrix[0])
 
@@ -65,10 +71,27 @@ def get_matrix_corners_and_sides(matrix):
     return corners, exposed_sides
 
 def generate_sequence(num_residue):
+    '''
+    The function generates a random sequence of hydrophobic and polar residues
+    Parameters :
+        num_residue (int) : The number of residues in the sequence
+    Returns :
+        sequence (list) : The sequence of hydrophobic and polar residues
+    '''
     return [random.choice(['H', 'P']) for _ in range(num_residue)]
 
 
 def calculate_energy(sequence, nc_seq_pairs, corners, exposed_sides):
+    '''
+    The function calculates the energy of the sequence
+    Parameters :
+        sequence (list) : The sequence of hydrophobic and polar residues
+        nc_seq_pairs (list) : The non-covalent sequence interaction pairs
+        corners (list) : The corners of the matrix
+        exposed_sides (list) : The exposed sides of the matrix
+    Returns :
+        energy (int) : The energy of the sequence
+    '''
     energy = 0
     for pair in nc_seq_pairs:
         interaction = INTERACTION_MATRIX.get(pair, 0)
@@ -83,6 +106,14 @@ def calculate_energy(sequence, nc_seq_pairs, corners, exposed_sides):
     return energy
 
 def get_neighbours(matrix, sequence):
+    '''
+    The function Returns the non-covalent sequence interaction pairs
+    Parameters :
+        matrix (numpy.ndarray) : The matrix
+        sequence (list) : The sequence of hydrophobic and polar residues
+    Returns :
+        nc_seq_pairs (list) : The non-covalent sequence interaction pairs
+    '''
     # Initialize the list to store the pairs
     pairs = []
 
@@ -113,6 +144,13 @@ def get_neighbours(matrix, sequence):
     return nc_seq_pairs
 
 def mutate_sequence(sequence):
+    '''
+    The function mutates the sequence by swapping two residues
+    Parameters :
+        sequence (list) : The sequence of hydrophobic and polar residues
+    Returns :
+        mutated_sequence (list) : The mutated sequence of hydrophobic and polar residues
+    '''
     # Clone the original sequence
     mutated_sequence = sequence[:]
 
@@ -125,6 +163,15 @@ def mutate_sequence(sequence):
     return mutated_sequence
 
 def metropolis_criterion(current_energy, proposed_energy, temperature):
+    '''
+    The function checks if the proposed sequence change is accepted
+    Parameters :
+        current_energy (int) : The energy of the current sequence
+        proposed_energy (int) : The energy of the proposed sequence
+        temperature (float) : The temperature of the system
+    Returns :
+        (bool) : True if the proposed sequence change is accepted, False otherwise
+    '''
     if proposed_energy < current_energy:
         return True
     else:
@@ -133,6 +180,16 @@ def metropolis_criterion(current_energy, proposed_energy, temperature):
         return random.random() < probability
 
 def monte_carlo_simulation(matrix, T, num_steps):
+    '''
+    The function performs Monte Carlo simulation to find the best sequence
+    Parameters :
+        matrix (numpy.ndarray) : The matrix
+        T (float) : The temperature of the system
+        num_steps (int) : The number of Monte Carlo steps
+    Returns :
+        best_sequence (list) : The best sequence of hydrophobic and polar residues
+        best_energy (int) : The energy of the best sequence
+    '''
     num_residue = matrix.size
     corners, exposed_sides = get_matrix_corners_and_sides(matrix)
     best_sequence = generate_sequence(num_residue)
@@ -142,7 +199,7 @@ def monte_carlo_simulation(matrix, T, num_steps):
     current_energy = best_energy
 
     for step in range(num_steps):
-        temperature = T * (np.cos((np.pi/2) * step/num_steps))   # Cooling schedule (cosine annealing) to decrease the temperature over time (Learning rate schedulers)
+        temperature = T * (np.cos((9*np.pi/20) * step/num_steps))   # Cooling schedule (cosine annealing)
         # Propose a sequence change (e.g., swap two residues)
         # Implement your method to change the sequence (e.g., swap two residues)
         new_sequence = mutate_sequence(current_sequence)
@@ -160,9 +217,22 @@ def monte_carlo_simulation(matrix, T, num_steps):
                 best_energy = proposed_energy
 
     return best_sequence, best_energy
-
-
-def main():
+    
+if __name__ == "__main__":
+    '''
+    Parameters :
+        matrix (numpy.ndarray) : The matrix defining the structure of the protein
+        T (float) : The temperature of the system
+        num_steps (int) : The number of Monte Carlo steps
+    Returns :
+        best_sequence (list) : The best sequence of hydrophobic and polar residues
+        best_energy (int) : The energy of the best sequence
+    Note on temperature (T):
+        The temperature used in calculating the metropolis criteria varies over time 
+        to allow for more exploration initially and then more exploitation at later stages.
+        Cosine annealing is applied in monte_carlo_simulation function, 
+        i.e., T is not constant but a function of step
+    '''
     matrix = np.array([  
         [1, 2, 15, 16],
         [4, 3, 14, 13],
@@ -170,13 +240,10 @@ def main():
         [6, 7, 10, 11]
     ])
 
-    T = 300  # Adjust the temperature (Cosine annealing is applied in monte_carlo_simulation function, i.e., T is not constant but a function of step)
+    T = 293  # Adjust the temperature
     num_steps = 1000  # Number of Monte Carlo steps
 
     best_sequence, best_energy = monte_carlo_simulation(matrix, T, num_steps)
     
     print("Best Sequence:", best_sequence)
     print("Best Energy:", best_energy)
-
-if __name__ == "__main__":
-    main()
