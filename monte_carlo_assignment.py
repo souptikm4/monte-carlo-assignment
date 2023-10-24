@@ -145,7 +145,7 @@ def get_neighbours(matrix, sequence):
 
 def mutate_sequence(sequence):
     '''
-    The function mutates the sequence by swapping two residues
+    The function mutates the sequence by randomly changing a residue
     Parameters :
         sequence (list) : The sequence of hydrophobic and polar residues
     Returns :
@@ -154,11 +154,15 @@ def mutate_sequence(sequence):
     # Clone the original sequence
     mutated_sequence = sequence[:]
 
-    # Choose two random positions to swap
-    pos1, pos2 = random.sample(range(len(mutated_sequence)), 2)
+    # Choose a random position
+    position = random.randint(0, len(mutated_sequence) - 1)
 
-    # Swap the residues at the selected positions
-    mutated_sequence[pos1], mutated_sequence[pos2] = mutated_sequence[pos2], mutated_sequence[pos1]
+    # Perform random point mutation (swap 'H' with 'P' or vice versa)
+    residue = mutated_sequence[position]
+    if residue == 'H':
+        mutated_sequence[position] = 'P'
+    elif residue == 'P':
+        mutated_sequence[position] = 'H'
 
     return mutated_sequence
 
@@ -240,7 +244,7 @@ if __name__ == "__main__":
         [6, 7, 10, 11]
     ])
 
-    T = 293  # Adjust the temperature
+    T = 5  # Adjust the temperature
     num_steps = 1000  # Number of Monte Carlo steps
 
     best_sequence, best_energy = monte_carlo_simulation(matrix, T, num_steps)
