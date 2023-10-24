@@ -45,12 +45,14 @@ source venv/bin/activate
 
 # Install required packages
 pip install numpy
+pip install matplotlib
 ```
 
 ### 4. Run the Simulation
 
 ```bash
 python monte_carlo_assignment.py 
+python monte-with-changes.py
 ```
 
 ### 5. View the Results
